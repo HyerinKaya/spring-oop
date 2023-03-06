@@ -1,15 +1,20 @@
 package com.inflearn.oop.order;
 
 import com.inflearn.oop.discount.DiscountPolicy;
-import com.inflearn.oop.discount.FixDiscountPolicy;
 import com.inflearn.oop.member.Member;
 import com.inflearn.oop.member.MemberRepository;
-import com.inflearn.oop.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+    private MemberRepository memberRepository;
+    //private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+    //->DIP, OCP 위반, 다음과 같이 수정해서 DiscountPolicy 추상클래스에 의존하도록
+    private DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy){
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
